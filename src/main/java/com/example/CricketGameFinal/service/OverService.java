@@ -1,40 +1,34 @@
 package com.example.CricketGameFinal.service;
 
-import com.example.CricketGameFinal.model.PlayerModel;
+import com.example.CricketGameFinal.model.entities.PlayerModel;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
 @Component
 public class OverService {
+
+    @Getter @Setter
     private static int overCount;
+
+    @Getter @Setter
     private static int ballsCount;
 
+    @Setter
     private static int tempBallCount;
+
+    @Getter
+    private static ArrayList<PlayerModel> bowlingTeam;
 
     private static PlayerModel currentBowler;
 
-    private static ArrayList<PlayerModel> bowlingTeam;
-
-    public static int getOverCount() {
-        return overCount;
-    }
-
-    public static void setOverCount(int overCount) {
-        overCount = overCount;
-    }
-
-    public static int getBallsCount() {
-        return ballsCount;
-    }
-
-    public static void setBallsCount(int ballsCount) {
-        ballsCount = ballsCount;
-    }
 
     public String getOverInString() {
         return String.format("%d.%d", overCount, ballsCount);
     }
+
 
     public static void startFromFirstOver() {
         overCount = 0;
@@ -44,7 +38,6 @@ public class OverService {
     public void IncreaseBallCount() {
         if (ballsCount == 5) {
             overCount++;
-
             ballsCount = 0;
         }
         else {
@@ -52,27 +45,18 @@ public class OverService {
         }
     }
 
-    private ArrayList<PlayerModel> getBowlingTeam() {
-        return bowlingTeam;
-    }
-
-    public static void setTempBallCount(int tempBallCount) {
-        OverService.tempBallCount = tempBallCount;
-    }
-
     public static void BowlingStarts() {
 
-        bowlingTeam = (ArrayList<PlayerModel>) GameService.getTeams().get(Math.abs(1 - GameService.getBatting()));
-        currentBowler = bowlingTeam.get(GameService.getCurrentBowler());
+        currentBowler = GameServiceImpl.getBowlingPlayer();
 
         if (tempBallCount < 6) {
             tempBallCount++;
             currentBowler.setBallsBowled(1);
         }
         else {
-            bowlingTeam.get(GameService.getCurrentBowler()).setActiveStatus("inactive");
-            GameService.setNextBowler();
-            currentBowler = bowlingTeam.get(GameService.getCurrentBowler());
+            currentBowler.setActiveStatus("inactive");
+            GameServiceImpl.setNextBowler();
+            currentBowler = GameServiceImpl.getBowlingPlayer();
             currentBowler.setActiveStatus("active");
 
             currentBowler.setBallsBowled(1);
@@ -80,6 +64,3 @@ public class OverService {
         }
     }
 }
-
-
-
