@@ -29,9 +29,8 @@ public class ScoreModel {
     public void setScoreOfBothTeams(int[] scoreOfBothTeams) {
         ScoreModel.scoreOfBothTeams = scoreOfBothTeams;
     }
-    public void addScore(int current_team, int run) {
+    public static void addScore(int current_team, int run) {
         scoreOfBothTeams[current_team] += run;
     }
 
 }
-

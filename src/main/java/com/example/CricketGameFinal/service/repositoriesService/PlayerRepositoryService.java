@@ -1,7 +1,6 @@
 package com.example.CricketGameFinal.service.repositoriesService;
 
-import com.example.CricketGameFinal.model.entities.Batsman;
-import com.example.CricketGameFinal.model.entities.Bowler;
+
 import com.example.CricketGameFinal.model.entities.PlayerModel;
 import com.example.CricketGameFinal.repository.CricketGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,20 +29,16 @@ public class PlayerRepositoryService {
         cricketGameRepository.save(playerModel);
     }
 
-    public List<Batsman> findTeamPlayers(String teamName) {
+    public List<PlayerModel> findTeamPlayers(String teamName) {
         return cricketGameRepository.findByTeamName(teamName);
     }
 
-    public Batsman findMaxScorer() {
+    public PlayerModel findMaxScorer() {
         return cricketGameRepository.findMaxScorer();
     }
 
-    public Bowler findMaxWicketTaker() {
+    public PlayerModel findMaxWicketTaker() {
         return cricketGameRepository.findMaxWicketTaker();
-    }
-
-    public void buildPlayerStatsTable() {
-        cricketGameRepository.mergePlayerStatsTableOfBatsManAndBowler();
     }
 
 }

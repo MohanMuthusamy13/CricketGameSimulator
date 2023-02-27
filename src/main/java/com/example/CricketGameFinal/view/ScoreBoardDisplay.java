@@ -4,15 +4,10 @@ import com.example.CricketGameFinal.service.GameServiceImpl;
 import com.example.CricketGameFinal.service.OverService;
 import com.example.CricketGameFinal.service.WicketStatusProvider;
 import com.example.CricketGameFinal.service.WinningStatusProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScoreBoardDisplay {
-
-
-    @Autowired
-    OverService over;
 
     public static void printFirstInningsFinalScore() {
         System.out.printf(
@@ -55,7 +50,7 @@ public class ScoreBoardDisplay {
 
                         %n""",
                 runsForDisplayProvider(GameServiceImpl.getRunsScorePerBall()),
-                over.getOverInString(), GameServiceImpl.getScoreTeams()[GameServiceImpl.getBatting()],
+                OverService.getOverInString(), GameServiceImpl.getScoreTeams()[GameServiceImpl.getBatting()],
                 WicketStatusProvider.getWicketLose(),
                 GameServiceImpl.getBattingPlayer().getName(), GameServiceImpl.getBattingPlayer().getScore(),
                 GameServiceImpl.getBowlingPlayer().getName(), GameServiceImpl.getBowlingPlayer().getWicketsTaken()
@@ -68,7 +63,7 @@ public class ScoreBoardDisplay {
                 Score board of Team 1
                 %s
                 Score board of Team 2
-                %s""", GameServiceImpl.getPlayingTeams().get(0), GameServiceImpl.getPlayingTeams().get(1));
+                %s""", GameServiceImpl.getPlayingTeamsPlayers().get(0), GameServiceImpl.getPlayingTeamsPlayers().get(1));
     }
 
     public void showFinalScoreBoard() {
@@ -104,9 +99,9 @@ public class ScoreBoardDisplay {
 
     public void showStatusPerBallForTesting() {
         System.out.println("SCORE BOARD OF BATTING");
-        System.out.println(GameServiceImpl.getPlayingTeams().get(GameServiceImpl.getBatting()));
+        System.out.println(GameServiceImpl.getPlayingTeamsPlayers().get(GameServiceImpl.getBatting()));
 
         System.out.println("SCORE BOARD OF BOWLING");
-        System.out.println(GameServiceImpl.getPlayingTeams().get(Math.abs(1 - GameServiceImpl.getBatting())));
+        System.out.println(GameServiceImpl.getPlayingTeamsPlayers().get(Math.abs(1 - GameServiceImpl.getBatting())));
     }
 }

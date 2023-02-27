@@ -51,18 +51,12 @@ public class PlayerBuilder {
     }
 
 
-    public PlayerModel getPlayer() {
+    public PlayerModel createPlayer() {
         if (baseAbility.equals("Batsman")) {
-            return new Batsman(
-                    playerName, playerScore, ballsFaced,
-                    ballsBowled, wicketsTaken, teamName
-            );
+            return PlayerFactory.createBatsmanWithInitialConditions(playerName, teamName);
         }
         else {
-            return new Bowler(
-                    playerName, playerScore, ballsFaced,
-                    ballsBowled, wicketsTaken, teamName
-            );
+            return PlayerFactory.createBowlerWithInitialConditions(playerName, teamName);
         }
     }
 }

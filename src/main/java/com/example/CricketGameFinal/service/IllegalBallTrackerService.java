@@ -1,28 +1,32 @@
 package com.example.CricketGameFinal.service;
 
 import com.example.CricketGameFinal.model.entities.ScoreModel;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-@Service
+// MAKING THE CLASS NON-INITIALIZABLE AS THIS IS UTILITY CLASS
 public class IllegalBallTrackerService {
 
-    private final int ignoreBallCount = -1;
-    @Autowired
-    ScoreModel score;
-    private int wideBalls;
-    private int noBalls;
+    private static final int ignoreBallCount = -1;
 
-    public void wideTracker() {
-        score.addScore(GameServiceImpl.getBatting(), 1);
+    @Getter
+    @Setter
+    private static int wideBalls;
+
+    @Getter
+    @Setter
+    private static int noBalls;
+
+    private IllegalBallTrackerService() {}
+
+    public static void wideTracker() {
+        ScoreModel.addScore(GameServiceImpl.getBatting(), 1);
         GameServiceImpl.getBowlingPlayer().setBallsBowled(ignoreBallCount);
         wideBalls++;
     }
 
-    public void noBallTracker() {
-        score.addScore(GameServiceImpl.getBatting(), 1);
+    public static void noBallTracker() {
+        ScoreModel.addScore(GameServiceImpl.getBatting(), 1);
         GameServiceImpl.getBowlingPlayer().setBallsBowled(ignoreBallCount);
         noBalls++;
     }

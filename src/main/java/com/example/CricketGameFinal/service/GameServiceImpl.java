@@ -1,11 +1,12 @@
 package com.example.CricketGameFinal.service;
 
 import com.example.CricketGameFinal.model.entities.*;
+import com.example.CricketGameFinal.service.repositoriesService.PlayerRepositoryService;
+import com.example.CricketGameFinal.service.repositoriesService.ScoreRepositoryService;
 import com.example.CricketGameFinal.view.ScoreBoardDisplay;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +14,9 @@ import java.util.Scanner;
 @Data
 @Component
 public class GameServiceImpl implements GameService {
+    private static List playingTeamsPlayers;
     private static List playingTeams;
+    private static List scoreRecords = new ArrayList<>();
     private static int currentBatter;
     private static int currentBowler = 7;
     private static int[] scoreTeams = new int[2];
@@ -31,18 +34,22 @@ public class GameServiceImpl implements GameService {
     @Autowired
     ScoreModel score;
     @Autowired
-    OverService over;
-    @Autowired
     WicketStatusProvider wicketTracker;
     @Autowired
     ScoreBoardDisplay scoreBoardDisplay;
     @Autowired
-    TossService tossService;
-    @Autowired
     RunsGenerator runsGenerator;
     @Autowired
-    IllegalBallTrackerService illegalBallTracker;
+    PlayersTeamService playersTeamService;
     WinningStatusProvider checkWinning = new WinningStatusProvider();
+
+    @Autowired
+    PlayerRepositoryService playerRepositoryService;
+    @Autowired
+    ScoreRepositoryService scoreRepositoryService;
+
+    @Autowired
+    ScoreBuilder scoreBuilder;
 
     public GameServiceImpl() {
         gameServiceProvider();
@@ -50,7 +57,7 @@ public class GameServiceImpl implements GameService {
 
     public void gameServiceProvider() {
         PlayerBuilder playerBuilder = new PlayerBuilder();
-        playingTeams = new PlayersTeamService(playerBuilder).generateBothTeams();
+        playingTeamsPlayers = new PlayersTeamService(playerBuilder).generateBothTeams();
         new ScoreModel().setScoreOfBothTeams(new int[2]);
         GameServiceImpl.scoreTeams = new ScoreModel().getScoreOfBothTeams();
         GameServiceImpl.wickets = WicketStatusProvider.getWicketLose();
@@ -58,11 +65,11 @@ public class GameServiceImpl implements GameService {
     }
 
     public static PlayerModel getBattingPlayer() {
-        return ((ArrayList<PlayerModel>) playingTeams.get(Batting)).get(currentBatter);
+        return ((ArrayList<PlayerModel>) playingTeamsPlayers.get(Batting)).get(currentBatter);
     }
 
     public static PlayerModel getBowlingPlayer() {
-        return ((ArrayList<PlayerModel>) playingTeams.get(Math.abs(1 - Batting))).get(currentBowler);
+        return ((ArrayList<PlayerModel>) playingTeamsPlayers.get(Math.abs(1 - Batting))).get(currentBowler);
     }
 
     public static int getBatting() {
@@ -123,6 +130,10 @@ public class GameServiceImpl implements GameService {
         GameServiceImpl.currentBowler = currentBowler;
     }
 
+    public static List getScoreRecords() {
+        return scoreRecords;
+    }
+
     public static boolean isLegalBallFlag() {
         return legalBallFlag;
     }
@@ -152,8 +163,8 @@ public class GameServiceImpl implements GameService {
         GameServiceImpl.currentBatter += 1;
     }
 
-    public static List getPlayingTeams() {
-        return playingTeams;
+    public static List getPlayingTeamsPlayers() {
+        return playingTeamsPlayers;
     }
 
     public void addScoreToBatter(int runsScorePerBall) {
@@ -188,15 +199,15 @@ public class GameServiceImpl implements GameService {
             GameServiceImpl.setLegalBallFlag(true);
         }
         else if (runsScorePerBall == -2) {
-            illegalBallTracker.wideTracker();
+            IllegalBallTrackerService.wideTracker();
             GameServiceImpl.setLegalBallFlag(false);
         }
         else if (runsScorePerBall == -3) {
-            illegalBallTracker.noBallTracker();
+            IllegalBallTrackerService.noBallTracker();
             GameServiceImpl.setLegalBallFlag(false);
         }
         else {
-            score.addScore(Batting, runsScorePerBall);
+            ScoreModel.addScore(Batting, runsScorePerBall);
             addScoreToBatter(runsScorePerBall);
             GameServiceImpl.setLegalBallFlag(true);
         }
@@ -212,7 +223,7 @@ public class GameServiceImpl implements GameService {
         }
         else {
             if (legalBallFlag)
-                over.IncreaseBallCount();
+                OverService.IncreaseBallCount();
         }
 
         if (Innings == 2) {
@@ -221,11 +232,26 @@ public class GameServiceImpl implements GameService {
             }
         }
         scoreBoardDisplay.showStatusPerBall();
+
+        String overCount = String.valueOf(OverService.getOverCount()) + "." + OverService.getBallsCount();
+        boolean isWicket = (runsScorePerBall == -1);
+
+        ScoreRecordModel scorePerBallTracker =
+                scoreBuilder
+                        .setOverCount(overCount)
+                        .setRunsScored(scoreBoardDisplay.runsForDisplayProvider(runsScorePerBall))
+                        .setInnings(Innings)
+                        .setTotalWicketsDown(WicketStatusProvider.getWicketLose())
+                        .setCurrentBatsman(GameServiceImpl.getBattingPlayer())
+                        .setCurrentBowler(GameServiceImpl.getBowlingPlayer())
+                        .createScoreTrackerRecord();
+        scoreRecords.add(scorePerBallTracker);
     }
 
 
     public void startGame() {
-        tossService.startTossing();
+        playerRepositoryService.storePlayerStats(playingTeamsPlayers);
+        TossService.startTossing();
         setActiveStatusForPlayers();
         while (Innings <= 2) {
             if ((WicketStatusProvider.getWicketLose() > 9 || OverService.getOverCount() == totalOvers) && Innings == 1) {

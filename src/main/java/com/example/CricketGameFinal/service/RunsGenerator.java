@@ -3,13 +3,12 @@ package com.example.CricketGameFinal.service;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 @Component
 public class RunsGenerator {
 
-    RunsScheduler runsScheduler = RunsScheduler.getRunsSchedulerInstance();
+    RunsScheduler runsScheduler = RunsScheduler.getInstance();
 
     public TreeMap<Integer, Integer> dictionaryAssigner(String playerBaseAbility) {
         if (playerBaseAbility.equals("Batsman")) {

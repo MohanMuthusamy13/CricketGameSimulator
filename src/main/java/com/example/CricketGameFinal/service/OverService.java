@@ -3,11 +3,7 @@ package com.example.CricketGameFinal.service;
 import com.example.CricketGameFinal.model.entities.PlayerModel;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-
-@Component
 public class OverService {
 
     @Getter @Setter
@@ -19,13 +15,10 @@ public class OverService {
     @Setter
     private static int tempBallCount;
 
-    @Getter
-    private static ArrayList<PlayerModel> bowlingTeam;
-
-    private static PlayerModel currentBowler;
+    private OverService() {}
 
 
-    public String getOverInString() {
+    public static String getOverInString() {
         return String.format("%d.%d", overCount, ballsCount);
     }
 
@@ -35,7 +28,7 @@ public class OverService {
         ballsCount = 0;
     }
 
-    public void IncreaseBallCount() {
+    public static void IncreaseBallCount() {
         if (ballsCount == 5) {
             overCount++;
             ballsCount = 0;
@@ -47,7 +40,7 @@ public class OverService {
 
     public static void BowlingStarts() {
 
-        currentBowler = GameServiceImpl.getBowlingPlayer();
+        PlayerModel currentBowler = GameServiceImpl.getBowlingPlayer();
 
         if (tempBallCount < 6) {
             tempBallCount++;

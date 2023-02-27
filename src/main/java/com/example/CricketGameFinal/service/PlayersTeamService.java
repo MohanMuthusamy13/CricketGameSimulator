@@ -2,6 +2,7 @@ package com.example.CricketGameFinal.service;
 
 import com.example.CricketGameFinal.model.entities.PlayerBuilder;
 import com.example.CricketGameFinal.model.entities.PlayerModel;
+import com.example.CricketGameFinal.service.repositoriesService.PlayerRepositoryService;
 import com.github.javafaker.Faker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,8 @@ import java.util.List;
 @Component
 public class PlayersTeamService {
 
+    private int teamNumber = 1;
+
     @Autowired
     private final PlayerBuilder playerBuilder;
 
@@ -19,6 +22,9 @@ public class PlayersTeamService {
     private int teamSelected;
     private final Faker faker = new Faker();
     private final List<List> playerTeams = new ArrayList<>();
+
+    @Autowired
+    PlayerRepositoryService playerRepositoryService;
 
     public PlayersTeamService(PlayerBuilder playerBuilder) {
         this.playerBuilder = playerBuilder;
@@ -38,9 +44,6 @@ public class PlayersTeamService {
             if (i < 6) {
                 baseAbility = "Batsman";
             }
-//            else if (i < 8) {
-//                baseAbility = "All rounder";
-//            }
             else {
                 baseAbility = "Bowler";
             }
@@ -48,7 +51,8 @@ public class PlayersTeamService {
                     playerBuilder
                             .setPlayerName(faker.name().fullName())
                             .setTeamName(String.format("Team %d", teamNumber))
-                            .setBaseAbility(baseAbility).getPlayer();
+                            .setBaseAbility(baseAbility).createPlayer();
+
 
             playerTeam.add(player);
         };
@@ -61,5 +65,12 @@ public class PlayersTeamService {
         }
         return playerTeams;
     }
+
+//    public Team generateTeamNew(String teamName) {
+//        return new Team(
+//                teamName, 0, generateTeam(teamNumber)
+//        );
+//    }
+
 
 }

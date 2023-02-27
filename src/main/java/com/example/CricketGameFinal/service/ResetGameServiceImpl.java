@@ -9,9 +9,6 @@ public class ResetGameServiceImpl implements ResetGameService{
     @Autowired
     GameServiceImpl gameService;
 
-    @Autowired
-    IllegalBallTrackerService illegalBallTrackerService;
-
     public void resetGame() {
         GameServiceImpl.setBatting(0);
         GameServiceImpl.setBowling(0);
@@ -20,8 +17,8 @@ public class ResetGameServiceImpl implements ResetGameService{
         GameServiceImpl.setCurrentBowler(7);
         GameServiceImpl.setWickets(0);
 
-        illegalBallTrackerService.setWideBalls(0);
-        illegalBallTrackerService.setNoBalls(0);
+        IllegalBallTrackerService.setWideBalls(0);
+        IllegalBallTrackerService.setNoBalls(0);
 
         gameService.setScoreTeams(new int[2]);
 

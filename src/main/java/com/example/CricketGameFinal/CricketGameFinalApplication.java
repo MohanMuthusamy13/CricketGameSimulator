@@ -1,6 +1,5 @@
 package com.example.CricketGameFinal;
 
-import com.example.CricketGameFinal.model.entities.Bowler;
 import com.example.CricketGameFinal.model.entities.PlayerBuilder;
 import com.example.CricketGameFinal.repository.CricketGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;

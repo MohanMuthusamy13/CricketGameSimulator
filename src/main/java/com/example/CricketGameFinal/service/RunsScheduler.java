@@ -66,7 +66,7 @@ public class RunsScheduler {
         return AllRounderBattingDictionary;
     }
 
-    public static RunsScheduler getRunsSchedulerInstance() {
+    public static RunsScheduler getInstance() {
         return Objects.requireNonNullElseGet(runsSchedulerInstance, RunsScheduler::new);
     }
 }

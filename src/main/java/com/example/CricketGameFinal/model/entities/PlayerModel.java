@@ -3,7 +3,8 @@ package com.example.CricketGameFinal.model.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-@MappedSuperclass
+@Entity
+@Table(name = "playerstats")
 @Getter
 @Setter
 @ToString
@@ -32,7 +33,6 @@ public class PlayerModel {
     private String baseAbility;
 
     @ToString.Exclude
-    @Transient
     private String activeStatus = "inactive";
 
     private String teamName;
@@ -53,4 +53,14 @@ public class PlayerModel {
         this.wicketsTaken += wicketsTaken;
     }
 
+    public PlayerModel(String name, int score, int ballsFaced, int ballsBowled, int wicketsTaken, String baseAbility, String activeStatus, String teamName) {
+        this.name = name;
+        this.score = score;
+        this.ballsFaced = ballsFaced;
+        this.ballsBowled = ballsBowled;
+        this.wicketsTaken = wicketsTaken;
+        this.baseAbility = baseAbility;
+        this.activeStatus = activeStatus;
+        this.teamName = teamName;
+    }
 }
