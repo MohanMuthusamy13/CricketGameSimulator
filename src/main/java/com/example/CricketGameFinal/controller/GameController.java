@@ -4,13 +4,12 @@ import com.example.CricketGameFinal.service.GameServiceImpl;
 import com.example.CricketGameFinal.service.repositoriesService.PlayerRepositoryService;
 import com.example.CricketGameFinal.service.ResetGameServiceImpl;
 import com.example.CricketGameFinal.service.repositoriesService.ScoreRepositoryService;
+import com.example.CricketGameFinal.service.repositoriesService.TeamRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Scanner;
 
 @Controller
 public class GameController {
@@ -23,6 +22,9 @@ public class GameController {
 
     @Autowired
     ScoreRepositoryService scoreRepositoryService;
+
+    @Autowired
+    TeamRepositoryService teamRepositoryService;
 
     @Autowired
     ResetGameServiceImpl resetGameService;

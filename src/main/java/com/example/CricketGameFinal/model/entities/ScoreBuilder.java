@@ -11,8 +11,8 @@ public class ScoreBuilder {
     public String ballOutCome;
     public int innings;
     private int wicketsDown;
-    private PlayerModel currentBatsman;
-    private PlayerModel currentBowler;
+    private Player currentBatsman;
+    private Player currentBowler;
 
     public ScoreBuilder setOverCount(String overCount) {
         this.overCount = overCount;
@@ -34,12 +34,12 @@ public class ScoreBuilder {
         return this;
     }
 
-    public ScoreBuilder setCurrentBatsman(PlayerModel currentBatsman) {
+    public ScoreBuilder setCurrentBatsman(Player currentBatsman) {
         this.currentBatsman = currentBatsman;
         return this;
     }
 
-    public ScoreBuilder setCurrentBowler(PlayerModel currentBowler) {
+    public ScoreBuilder setCurrentBowler(Player currentBowler) {
         this.currentBowler = currentBowler;
         return this;
     }

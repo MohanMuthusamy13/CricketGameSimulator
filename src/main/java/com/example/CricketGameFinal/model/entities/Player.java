@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerModel {
+public class Player {
 
     @Id
     @SequenceGenerator(name = "playerstats_sequence" , sequenceName = "playerstats_sequence" , allocationSize = 1)
@@ -37,6 +37,10 @@ public class PlayerModel {
 
     private String teamName;
 
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
+
     public void setScore(int score) {
         this.score += score;
     }
@@ -53,7 +57,9 @@ public class PlayerModel {
         this.wicketsTaken += wicketsTaken;
     }
 
-    public PlayerModel(String name, int score, int ballsFaced, int ballsBowled, int wicketsTaken, String baseAbility, String activeStatus, String teamName) {
+    public Player(String name, int score, int ballsFaced,
+                  int ballsBowled, int wicketsTaken, String baseAbility,
+                  String activeStatus,String teamName, Team team) {
         this.name = name;
         this.score = score;
         this.ballsFaced = ballsFaced;
@@ -62,5 +68,6 @@ public class PlayerModel {
         this.baseAbility = baseAbility;
         this.activeStatus = activeStatus;
         this.teamName = teamName;
+        this.team = team;
     }
 }

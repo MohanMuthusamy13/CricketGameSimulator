@@ -1,6 +1,6 @@
 package com.example.CricketGameFinal.service;
 
-import com.example.CricketGameFinal.model.entities.PlayerModel;
+import com.example.CricketGameFinal.model.entities.Player;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,7 +40,7 @@ public class OverService {
 
     public static void BowlingStarts() {
 
-        PlayerModel currentBowler = GameServiceImpl.getBowlingPlayer();
+        Player currentBowler = GameServiceImpl.getBowlingPlayer();
 
         if (tempBallCount < 6) {
             tempBallCount++;

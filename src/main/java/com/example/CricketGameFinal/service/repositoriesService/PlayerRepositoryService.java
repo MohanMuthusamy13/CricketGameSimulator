@@ -1,7 +1,7 @@
 package com.example.CricketGameFinal.service.repositoriesService;
 
 
-import com.example.CricketGameFinal.model.entities.PlayerModel;
+import com.example.CricketGameFinal.model.entities.Player;
 import com.example.CricketGameFinal.repository.CricketGameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class PlayerRepositoryService {
 
     public void saveHelper(List team) {
         for (Object playerModel : team) {
-            saveFunction((PlayerModel) playerModel);
+            saveFunction((Player) playerModel);
         }
     }
 
@@ -25,19 +25,19 @@ public class PlayerRepositoryService {
         saveHelper((List) teams.get(1));
     }
 
-    public void saveFunction(PlayerModel playerModel) {
+    public void saveFunction(Player playerModel) {
         cricketGameRepository.save(playerModel);
     }
 
-    public List<PlayerModel> findTeamPlayers(String teamName) {
+    public List<Player> findTeamPlayers(String teamName) {
         return cricketGameRepository.findByTeamName(teamName);
     }
 
-    public PlayerModel findMaxScorer() {
+    public Player findMaxScorer() {
         return cricketGameRepository.findMaxScorer();
     }
 
-    public PlayerModel findMaxWicketTaker() {
+    public Player findMaxWicketTaker() {
         return cricketGameRepository.findMaxWicketTaker();
     }
 

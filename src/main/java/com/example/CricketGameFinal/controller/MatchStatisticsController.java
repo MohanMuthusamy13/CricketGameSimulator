@@ -1,6 +1,6 @@
 package com.example.CricketGameFinal.controller;
 
-import com.example.CricketGameFinal.model.entities.PlayerModel;
+import com.example.CricketGameFinal.model.entities.Player;
 import com.example.CricketGameFinal.service.repositoriesService.PlayerRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,17 +20,17 @@ public class MatchStatisticsController {
     PlayerRepositoryService playerRepositoryService;
 
     @GetMapping("/showMaximumScorePlayer")
-    public ResponseEntity<PlayerModel> findMaximumScorer() {
+    public ResponseEntity<Player> findMaximumScorer() {
         return new ResponseEntity<>(playerRepositoryService.findMaxScorer(), HttpStatus.OK);
     }
 
     @GetMapping("/showMaxWicketTaker")
-    public ResponseEntity<PlayerModel> maxWicketTaker() {
+    public ResponseEntity<Player> maxWicketTaker() {
         return new ResponseEntity<>(playerRepositoryService.findMaxWicketTaker(), HttpStatus.OK);
     }
 
     @GetMapping("/showTeamPlayers/{teamName}")
-    public ResponseEntity<List<PlayerModel>> findTeamPlayers(@PathVariable String teamName) {
+    public ResponseEntity<List<Player>> findTeamPlayers(@PathVariable String teamName) {
         return new ResponseEntity<>(playerRepositoryService.findTeamPlayers(teamName), HttpStatus.OK);
     }
 

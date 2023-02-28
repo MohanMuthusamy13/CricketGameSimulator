@@ -24,14 +24,14 @@ public class ScoreRecordModel {
 
     @ManyToOne
     @JoinColumn(name = "batsman_id")
-    private PlayerModel batsman;
+    private Player batsman;
 
     @ManyToOne
     @JoinColumn(name = "bowler_id")
-    private PlayerModel bowler;
+    private Player bowler;
 
     public ScoreRecordModel(String overCount, String ballOutCome, int innings, int totalWicketsDown,
-                            PlayerModel currentBatsman, PlayerModel currentBowler) {
+                            Player currentBatsman, Player currentBowler) {
         this.overCount = overCount;
         this.ballOutCome = ballOutCome;
         this.innings = innings;

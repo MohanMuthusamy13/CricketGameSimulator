@@ -13,6 +13,7 @@ public class PlayerBuilder {
     private int wicketsTaken;
     private String baseAbility;
     private String teamName;
+    private Team team;
 
     public PlayerBuilder setPlayerName(String name) {
         this.playerName = name;
@@ -44,19 +45,23 @@ public class PlayerBuilder {
         return this;
     }
 
-
     public PlayerBuilder setTeamName(String teamName) {
         this.teamName = teamName;
         return this;
     }
 
+    public PlayerBuilder setTeam(Team team) {
+        this.team = team;
+        return this;
+    }
 
-    public PlayerModel createPlayer() {
+
+    public Player createPlayer() {
         if (baseAbility.equals("Batsman")) {
-            return PlayerFactory.createBatsmanWithInitialConditions(playerName, teamName);
+            return PlayerFactory.createBatsmanWithInitialConditions(playerName, teamName, team);
         }
         else {
-            return PlayerFactory.createBowlerWithInitialConditions(playerName, teamName);
+            return PlayerFactory.createBowlerWithInitialConditions(playerName, teamName, team);
         }
     }
 }

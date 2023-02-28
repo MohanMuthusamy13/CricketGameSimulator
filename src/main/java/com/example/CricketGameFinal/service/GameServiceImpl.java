@@ -1,8 +1,10 @@
 package com.example.CricketGameFinal.service;
 
 import com.example.CricketGameFinal.model.entities.*;
+import com.example.CricketGameFinal.repository.TeamRepository;
 import com.example.CricketGameFinal.service.repositoriesService.PlayerRepositoryService;
 import com.example.CricketGameFinal.service.repositoriesService.ScoreRepositoryService;
+import com.example.CricketGameFinal.service.repositoriesService.TeamRepositoryService;
 import com.example.CricketGameFinal.view.ScoreBoardDisplay;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,12 @@ public class GameServiceImpl implements GameService {
     private static int runsScorePerBall;
     static Scanner sc = new Scanner(System.in);
 
+
+    private Team team1;
+    private Team team2;
+
+    private static List<Team> teams = new ArrayList<>();
+
     @Autowired
     ScoreModel score;
     @Autowired
@@ -47,29 +55,48 @@ public class GameServiceImpl implements GameService {
     PlayerRepositoryService playerRepositoryService;
     @Autowired
     ScoreRepositoryService scoreRepositoryService;
+    @Autowired
+    TeamCreationService teamCreationService;
+    @Autowired
+    TeamRepositoryService teamRepositoryService;
 
     @Autowired
     ScoreBuilder scoreBuilder;
+    private final TeamRepository teamRepository;
 
-    public GameServiceImpl() {
+    PlayerBuilder playerBuilder = new PlayerBuilder();
+
+
+    public GameServiceImpl(TeamRepository teamRepository) {
         gameServiceProvider();
+        this.teamRepository = teamRepository;
     }
 
     public void gameServiceProvider() {
-        PlayerBuilder playerBuilder = new PlayerBuilder();
-        playingTeamsPlayers = new PlayersTeamService(playerBuilder).generateBothTeams();
+//        PlayerBuilder playerBuilder = new PlayerBuilder();
+////        playingTeamsPlayers = new PlayersTeamService(playerBuilder).generateBothTeams();
+//        team1 = new PlayersTeamService(playerBuilder).generateTeam("India");
+//        team2 = new PlayersTeamService(playerBuilder).generateTeamm("England");
         new ScoreModel().setScoreOfBothTeams(new int[2]);
         GameServiceImpl.scoreTeams = new ScoreModel().getScoreOfBothTeams();
         GameServiceImpl.wickets = WicketStatusProvider.getWicketLose();
         GameServiceImpl.Innings = 1;
     }
 
-    public static PlayerModel getBattingPlayer() {
-        return ((ArrayList<PlayerModel>) playingTeamsPlayers.get(Batting)).get(currentBatter);
+    public List<Team> generateTeams() {
+        team1 = new PlayersTeamService(playerBuilder).generateTeam("India");
+        team2 = new PlayersTeamService(playerBuilder).generateTeam("England");
+        teams.add(team1);
+        teams.add(team2);
+        return teams;
     }
 
-    public static PlayerModel getBowlingPlayer() {
-        return ((ArrayList<PlayerModel>) playingTeamsPlayers.get(Math.abs(1 - Batting))).get(currentBowler);
+    public static Player getBattingPlayer() {
+        return ((ArrayList<Player>) playingTeamsPlayers.get(Batting)).get(currentBatter);
+    }
+
+    public static Player getBowlingPlayer() {
+        return ((ArrayList<Player>) playingTeamsPlayers.get(Math.abs(1 - Batting))).get(currentBowler);
     }
 
     public static int getBatting() {
@@ -163,6 +190,10 @@ public class GameServiceImpl implements GameService {
         GameServiceImpl.currentBatter += 1;
     }
 
+    public static List<Team> getTeams() {
+        return teams;
+    }
+
     public static List getPlayingTeamsPlayers() {
         return playingTeamsPlayers;
     }
@@ -248,8 +279,22 @@ public class GameServiceImpl implements GameService {
         scoreRecords.add(scorePerBallTracker);
     }
 
+    public List<Team> teamBuilder() {
+        System.out.println("Enter the name of the team 1");
+        team1 = new PlayersTeamService(playerBuilder).generateTeam(sc.next());
+        System.out.println("Enter the name of the team 2");
+        team2 = new PlayersTeamService(playerBuilder).generateTeam(sc.next());
+        teams.add(team1);
+        teams.add(team2);
+        teamRepositoryService.saveTeams(GameServiceImpl.getTeams());
+        return teams;
+    }
+
 
     public void startGame() {
+        teams = teamBuilder();
+        playingTeamsPlayers = List.of(teams.get(0).getPlayers(), teams.get(1).getPlayers());
+        System.out.println(playingTeamsPlayers);
         playerRepositoryService.storePlayerStats(playingTeamsPlayers);
         TossService.startTossing();
         setActiveStatusForPlayers();
